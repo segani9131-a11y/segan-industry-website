@@ -5,7 +5,7 @@
 
 // Configuration
 const CONFIG = {
-  apiBaseUrl: 'http://localhost:8000/api', // Change to production URL when deployed
+  apiBaseUrl: 'https://segan-industry-website-production.up.railway.app/api',
   companyName: 'Segan Industry Private Limited',
   gstin: '33AAECS1234F1Z5'
 };
