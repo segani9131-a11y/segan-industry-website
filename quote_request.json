@@ -1,0 +1,12 @@
+{
+  "customer_name": "Test Customer",
+  "customer_email": "test@example.com",
+  "customer_phone": "+91-9876543210",
+  "harness_type": "automotive",
+  "quantity": 100,
+  "wire_length_meters": 50,
+  "wire_gauge_mm2": 1.0,
+  "connector_count": 20,
+  "terminal_count": 40,
+  "delivery_location": "Chennai, Tamil Nadu"
+}

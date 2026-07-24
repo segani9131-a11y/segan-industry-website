@@ -1,0 +1,21 @@
+{
+  "harness_type": "automotive",
+  "wire_gauge_mm2": 0.5,
+  "wire_length_meters": 3.5,
+  "connector_count": 12,
+  "terminal_count": 48,
+  "quantity": 100,
+  "expected_delivery_days": 30,
+  "shielding": false,
+  "waterproof": true,
+  "ultrasonic_weld": false,
+  "tape_wrap": true,
+  "testing": true,
+  "labeling": true,
+  "customer_name": "John Doe",
+  "customer_email": "john@example.com",
+  "customer_phone": "+91 98765 43210",
+  "company_name": "ABC Automotive Pvt Ltd",
+  "delivery_location": "Chennai, Tamil Nadu, India",
+  "gstin": "33AABCA5678D1Z2"
+}

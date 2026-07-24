@@ -1,0 +1,308 @@
+{
+  "company": {
+    "name": "Segan Industry Private Limited",
+    "tagline": "Precision Wiring Harness & Automation Solutions",
+    "address": "Plot No. 45, SIDCO Industrial Estate, Ambattur, Chennai - 600098, Tamil Nadu, India",
+    "phone": "+91-44-2625-XXXX",
+    "email": "info@seganindustry.com",
+    "website": "https://seganindustry.com",
+    "gstin": "33XXXXXXXXXX1ZX",
+    "pan": "XXXXXXXXXX",
+    "cin": "U31909TN2020PTC123456"
+  },
+  "gst": {
+    "state": "Tamil Nadu",
+    "state_code": "33",
+    "cgst_rate": 9,
+    "sgst_rate": 9,
+    "igst_rate": 18,
+    "hsn_codes": {
+      "wiring_harness": "8544",
+      "connectors": "8536",
+      "terminals": "8536",
+      "automation_equipment": "8479"
+    }
+  },
+  "gst_rates": {
+    "wiring_harness": 18,
+    "connectors": 18,
+    "terminals": 18,
+    "automation_equipment": 18,
+    "services": 18
+  },
+  "suppliers": [
+    {
+      "id": "SUP001",
+      "name": "Motherson Sumi Systems Ltd",
+      "location": "Chennai, Tamil Nadu",
+      "rating": 4.8,
+      "lead_time_days": 7,
+      "payment_terms": "Net 30",
+      "materials": ["Connectors", "Terminals", "Wires"],
+      "gst_compliant": true
+    },
+    {
+      "id": "SUP002",
+      "name": "Yazaki India Pvt Ltd",
+      "location": "Chennai, Tamil Nadu",
+      "rating": 4.7,
+      "lead_time_days": 10,
+      "payment_terms": "Net 45",
+      "materials": ["Connectors", "Wire Harness Components"],
+      "gst_compliant": true
+    },
+    {
+      "id": "SUP003",
+      "name": "Sumitomo Wiring Systems",
+      "location": "Chennai, Tamil Nadu",
+      "rating": 4.6,
+      "lead_time_days": 14,
+      "payment_terms": "Net 30",
+      "materials": ["Terminals", "Connectors", "Seals"],
+      "gst_compliant": true
+    },
+    {
+      "id": "SUP004",
+      "name": "Leoni Wiring Systems India",
+      "location": "Pune, Maharashtra",
+      "rating": 4.5,
+      "lead_time_days": 14,
+      "payment_terms": "Net 45",
+      "materials": ["Wires", "Connectors", "Tapes"],
+      "gst_compliant": true
+    },
+    {
+      "id": "SUP005",
+      "name": "Local Copper Wire Suppliers",
+      "location": "Chennai, Tamil Nadu",
+      "rating": 4.3,
+      "lead_time_days": 3,
+      "payment_terms": "Net 15",
+      "materials": ["Copper Wire", "PVC Wire", "FRLS Wire"],
+      "gst_compliant": true
+    }
+  ],
+  "materials": {
+    "copper_wire": {
+      "base_price_per_kg": 850,
+      "unit": "kg",
+      "suppliers": ["SUP005"],
+      "gst_rate": 18
+    },
+    "pvc_wire": {
+      "base_price_per_meter": 12,
+      "unit": "meter",
+      "suppliers": ["SUP005"],
+      "gst_rate": 18
+    },
+    "connectors": {
+      "base_price_per_unit": 45,
+      "unit": "piece",
+      "suppliers": ["SUP001", "SUP002", "SUP003"],
+      "gst_rate": 18
+    },
+    "terminals": {
+      "base_price_per_unit": 8,
+      "unit": "piece",
+      "suppliers": ["SUP001", "SUP003"],
+      "gst_rate": 18
+    },
+    "tape_pvc": {
+      "base_price_per_roll": 85,
+      "unit": "roll",
+      "suppliers": ["SUP005"],
+      "gst_rate": 18
+    },
+    "heat_shrink": {
+      "base_price_per_meter": 15,
+      "unit": "meter",
+      "suppliers": ["SUP001", "SUP005"],
+      "gst_rate": 18
+    },
+    "corrugated_tube": {
+      "base_price_per_meter": 25,
+      "unit": "meter",
+      "suppliers": ["SUP001", "SUP004"],
+      "gst_rate": 18
+    }
+  },
+  "machinery": [
+    {
+      "id": "MCH001",
+      "name": "Automatic Wire Cutting & Stripping Machine",
+      "manufacturer": "Komax",
+      "model": "Gamma 333PC",
+      "capacity": "0.13-6 mm²",
+      "speed": "6000 pcs/hour",
+      "price_inr": 2800000,
+      "maintenance_cost_yearly": 150000,
+      "power_consumption_kw": 2.5,
+      "suitable_for": ["Automotive Harness", "Industrial Harness"]
+    },
+    {
+      "id": "MCH002",
+      "name": "Automatic Crimping Machine",
+      "manufacturer": "Komax",
+      "model": "Zeta 633",
+      "capacity": "0.13-6 mm²",
+      "speed": "4000 pcs/hour",
+      "price_inr": 3500000,
+      "maintenance_cost_yearly": 200000,
+      "power_consumption_kw": 3.5,
+      "suitable_for": ["Automotive Harness", "EV Harness"]
+    },
+    {
+      "id": "MCH003",
+      "name": "Wire Cutting & Stripping Machine",
+      "manufacturer": "Schleuniger",
+      "model": "UniStrip 2545",
+      "capacity": "0.08-10 mm²",
+      "speed": "5000 pcs/hour",
+      "price_inr": 1800000,
+      "maintenance_cost_yearly": 100000,
+      "power_consumption_kw": 2.0,
+      "suitable_for": ["Industrial Harness", "Control Panel Wiring"]
+    },
+    {
+      "id": "MCH004",
+      "name": "Automatic Taping Machine",
+      "manufacturer": "Kodera",
+      "model": "KT-3000",
+      "capacity": "Up to 50mm diameter",
+      "speed": "3000 mm/min",
+      "price_inr": 1200000,
+      "maintenance_cost_yearly": 80000,
+      "power_consumption_kw": 1.5,
+      "suitable_for": ["Automotive Harness", "EV Harness", "Industrial Harness"]
+    },
+    {
+      "id": "MCH005",
+      "name": "Continuity & Hipot Tester",
+      "manufacturer": "Cirris",
+      "model": "CH2",
+      "capacity": "Up to 2000V AC/DC",
+      "speed": "2000 points/sec",
+      "price_inr": 800000,
+      "maintenance_cost_yearly": 50000,
+      "power_consumption_kw": 0.5,
+      "suitable_for": ["All Harness Types"]
+    }
+  ],
+  "employees": {
+    "categories": [
+      {
+        "role": "Production Manager",
+        "count": 2,
+        "salary_monthly": 65000,
+        "overtime_rate": 1.5,
+        "benefits": ["PF", "ESI", "Medical", "Transport"]
+      },
+      {
+        "role": "Production Supervisor",
+        "count": 4,
+        "salary_monthly": 35000,
+        "overtime_rate": 1.5,
+        "benefits": ["PF", "ESI", "Medical", "Transport"]
+      },
+      {
+        "role": "Wire Cutting Operator",
+        "count": 8,
+        "salary_monthly": 18000,
+        "overtime_rate": 1.5,
+        "benefits": ["PF", "ESI", "Medical"]
+      },
+      {
+        "role": "Crimping Operator",
+        "count": 10,
+        "salary_monthly": 20000,
+        "overtime_rate": 1.5,
+        "benefits": ["PF", "ESI", "Medical"]
+      },
+      {
+        "role": "Assembly Operator",
+        "count": 15,
+        "salary_monthly": 16000,
+        "overtime_rate": 1.5,
+        "benefits": ["PF", "ESI", "Medical"]
+      },
+      {
+        "role": "Quality Inspector",
+        "count": 4,
+        "salary_monthly": 22000,
+        "overtime_rate": 1.5,
+        "benefits": ["PF", "ESI", "Medical"]
+      },
+      {
+        "role": "Maintenance Technician",
+        "count": 3,
+        "salary_monthly": 25000,
+        "overtime_rate": 1.5,
+        "benefits": ["PF", "ESI", "Medical", "Transport"]
+      },
+      {
+        "role": "Store Keeper",
+        "count": 2,
+        "salary_monthly": 18000,
+        "overtime_rate": 1.5,
+        "benefits": ["PF", "ESI", "Medical"]
+      }
+    ],
+    "welfare": {
+      "pf_rate": 12,
+      "esi_rate": 3.25,
+      "bonus_percentage": 8.33,
+      "leave_days_annual": 21,
+      "medical_insurance_per_employee_yearly": 5000,
+      "transport_allowance_monthly": 1600,
+      "canteen_subsidy_per_meal": 30
+    }
+  },
+  "production": {
+    "shifts_per_day": 2,
+    "hours_per_shift": 8,
+    "working_days_per_month": 26,
+    "efficiency_target": 85,
+    "overtime_hours_per_month": 40,
+    "defect_rate_target": 1.5
+  },
+  "inventory": {
+    "reorder_points": {
+      "copper_wire_kg": 500,
+      "pvc_wire_meters": 5000,
+      "connectors_pcs": 2000,
+      "terminals_pcs": 5000,
+      "tape_pvc_rolls": 100,
+      "heat_shrink_meters": 1000,
+      "corrugated_tube_meters": 500
+    },
+    "safety_stock_days": 15,
+    "lead_time_buffer_days": 5
+  },
+  "quotation": {
+    "validity_days": 30,
+    "profit_margin_percent": 18,
+    "overhead_percentage": 15,
+    "contingency_percentage": 5,
+    "payment_terms": "50% advance, 50% before dispatch",
+    "delivery_terms": "Ex-Works Chennai",
+    "warranty_months": 12
+  },
+  "email": {
+    "smtp_server": "smtp.gmail.com",
+    "smtp_port": 587,
+    "sender_email": "info@seganindustry.com",
+    "sender_password": "your_app_password_here",
+    "recipient_emails": ["info@seganindustry.com", "sales@seganindustry.com"],
+    "use_tls": true
+  },
+  "database": {
+    "type": "sqlite",
+    "path": "segan_industry.db"
+  },
+  "ai_agent": {
+    "model": "gpt-4-turbo-preview",
+    "temperature": 0.3,
+    "max_tokens": 2000,
+    "system_prompt": "You are an AI agent for Segan Industry Private Limited, a wiring harness manufacturing company in Chennai, Tamil Nadu, India. You specialize in wiring harness manufacturing, automation, raw material sourcing, supplier selection, GST calculations (Tamil Nadu - CGST 9% + SGST 9%), profit/loss calculations, employee welfare, production workflow automation, machinery recommendations, inventory management, and customer quotation generation. Always consider Tamil Nadu GST rates (CGST 9% + SGST 9% = 18% GST). Provide accurate calculations with GST breakdown. Consider Tamil Nadu labor laws and employee welfare regulations."
+  }
+}

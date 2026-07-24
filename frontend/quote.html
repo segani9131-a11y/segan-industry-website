@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Segan Industry AI-Powered Quote Generator - Get instant wiring harness quotations with real-time material pricing, GST calculation, and profit optimization">
+  <meta name="keywords" content="wiring harness quote, quotation generator, automotive harness price, EV harness cost, industrial harness quotation">
+  <title>Quote Generator | Segan Industry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+</head>
+<body>
+  <div class="toast-container" aria-live="polite"></div>
+
+  <header class="header" role="banner">
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+      <a href="index.html" class="nav-brand" aria-label="Segan Industry Home">
+        <div class="nav-logo" aria-hidden="true">SI</div>
+        <div>
+          <span class="nav-title">Segan Industry</span>
+          <span class="nav-tagline">Private Limited</span>
+        </div>
+      </a>
+
+      <ul class="nav-menu" role="menubar">
+        <li role="none"><a href="index.html" class="nav-link" role="menuitem"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg><span>Home</span></a></li>
+        <li role="none"><a href="products.html" class="nav-link" role="menuitem"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path></svg><span>Products</span></a></li>
+        <li role="none"><a href="automation.html" class="nav-link" role="menuitem"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="2" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg><span>Automation</span></a></li>
+        <li role="none"><a href="about.html" class="nav-link" role="menuitem"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg><span>About</span></a></li>
+        <li role="none"><a href="contact.html" class="nav-link" role="menuitem"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span>Contact</span></a></li>
+      </ul>
+
+      <div class="nav-cta">
+        <a href="quote.html" class="btn btn-primary">Get a Quote</a>
+        <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main role="main">
+    <!-- Page Hero -->
+    <section class="products-hero section" aria-labelledby="page-title">
+      <div class="container">
+        <div class="section-header">
+          <h1 id="page-title" class="section-title">AI Quote Generator</h1>
+          <p class="section-subtitle" style="font-size: 1.25rem;">Instant wiring harness quotations with real-time material pricing, GST calculation, and profit optimization</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quote Form -->
+    <section class="section" aria-labelledby="quote-form-title">
+      <div class="container">
+        <div class="grid grid-2" style="gap: var(--space-3xl); align-items: start;">
+          <!-- Quote Form -->
+          <div>
+            <div class="card" style="position: sticky; top: 100px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg); padding-bottom: var(--space-lg); border-bottom: 1px solid var(--border-primary);">
+                <h2 id="quote-form-title" class="section-title" style="font-size: 1.5rem; text-align: left;">Generate Quotation</h2>
+                <span class="badge badge-primary">AI Powered</span>
+              </div>
+
+              <form id="quote-form" novalidate>
+                <!-- Harness Type -->
+                <div class="form-group">
+                  <label for="harness_type" class="form-label">Harness Type <span class="required" aria-hidden="true">*</span></label>
+                  <select id="harness_type" name="harness_type" class="form-select" required aria-required="true">
+                    <option value="">Select harness type</option>
+                    <optgroup label="Automotive">
+                      <option value="automotive">Automotive Harness (2W/4W/CV)</option>
+                    </optgroup>
+                    <optgroup label="EV Harnesses">
+                      <option value="ev">EV Harness (High/Low Voltage)</option>
+                    </optgroup>
+                    <optgroup label="Industrial">
+                      <option value="industrial">Industrial Harness</option>
+                      <option value="control_panel">Control Panel Harness</option>
+                    </optgroup>
+                    <optgroup label="Custom">
+                      <option value="custom">Custom / Other</option>
+                    </optgroup>
+                  </select>
+                  <span class="form-error" aria-live="polite"></span>
+                </div>
+
+                <!-- Specifications Grid -->
+                <fieldset class="form-group" style="border: 1px solid var(--border-primary); border-radius: var(--radius-lg); padding: var(--space-lg); margin-bottom: var(--space-lg);">
+                  <legend class="form-label" style="font-size: 1rem; padding: 0 var(--space-sm);">Key Specifications</legend>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="wire_gauge_mm2" class="form-label">Primary Wire Gauge (mm²) <span class="required" aria-hidden="true">*</span></label>
+                      <select id="wire_gauge_mm2" name="wire_gauge_mm2" class="form-select" required aria-required="true">
+                        <option value="">Select gauge</option>
+                        <option value="0.13">0.13 mm² (26 AWG)</option>
+                        <option value="0.22">0.22 mm² (24 AWG)</option>
+                        <option value="0.35">0.35 mm² (22 AWG)</option>
+                        <option value="0.5">0.5 mm² (20 AWG)</option>
+                        <option value="0.75">0.75 mm² (18 AWG)</option>
+                        <option value="1.0">1.0 mm² (17 AWG)</option>
+                        <option value="1.5">1.5 mm² (15 AWG)</option>
+                        <option value="2.5">2.5 mm² (13 AWG)</option>
+                        <option value="4.0">4.0 mm² (11 AWG)</option>
+                        <option value="6.0">6.0 mm² (9 AWG)</option>
+                        <option value="10.0">10.0 mm² (7 AWG)</option>
+                        <option value="16.0">16.0 mm² (5 AWG)</option>
+                        <option value="25.0">25.0 mm² (3 AWG)</option>
+                        <option value="35.0">35.0 mm² (2 AWG)</option>
+                        <option value="50.0">50.0 mm² (1/0 AWG)</option>
+                      </select>
+                      <span class="form-error" aria-live="polite"></span>
+                    </div>
+                    <div class="form-group">
+                      <label for="wire_length_meters" class="form-label">Approx. Harness Length (meters) <span class="required" aria-hidden="true">*</span></label>
+                      <input type="number" id="wire_length_meters" name="wire_length_meters" class="form-input" min="0.1" max="100" step="0.1" required aria-required="true" placeholder="e.g., 3.5">
+                      <span class="form-error" aria-live="polite"></span>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="connector_count" class="form-label">Number of Connectors <span class="required" aria-hidden="true">*</span></label>
+                      <input type="number" id="connector_count" name="connector_count" class="form-input" min="1" max="100" required aria-required="true" placeholder="e.g., 12">
+                      <span class="form-error" aria-live="polite"></span>
+                    </div>
+                    <div class="form-group">
+                      <label for="terminal_count" class="form-label">Number of Terminals <span class="required" aria-hidden="true">*</span></label>
+                      <input type="number" id="terminal_count" name="terminal_count" class="form-input" min="1" max="500" required aria-required="true" placeholder="e.g., 48">
+                      <span class="form-error" aria-live="polite"></span>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="quantity" class="form-label">Quantity Required <span class="required" aria-hidden="true">*</span></label>
+                      <input type="number" id="quantity" name="quantity" class="form-input" min="1" max="10000" required aria-required="true" placeholder="e.g., 500" value="100">
+                      <span class="form-error" aria-live="polite"></span>
+                    </div>
+                    <div class="form-group">
+                      <label for="expected_delivery_days" class="form-label">Expected Delivery (days)</label>
+                      <input type="number" id="expected_delivery_days" name="expected_delivery_days" class="form-input" min="1" max="365" placeholder="e.g., 30" value="30">
+                      <span class="form-error" aria-live="polite"></span>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <!-- Additional Options -->
+                <fieldset class="form-group" style="border: 1px solid var(--border-primary); border-radius: var(--radius-lg); padding: var(--space-lg); margin-bottom: var(--space-lg);">
+                  <legend class="form-label" style="font-size: 1rem; padding: 0 var(--space-sm);">Additional Requirements</legend>
+
+                  <div class="form-row">
+                    <div class="form-group" style="flex: 1;">
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="shielding" value="true">
+                        <span class="checkmark"></span>
+                        EMI/RFI Shielding Required
+                      </label>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="waterproof" value="true">
+                        <span class="checkmark"></span>
+                        Waterproof / IP67+ Rating
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group" style="flex: 1;">
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="ultrasonic_weld" value="true">
+                        <span class="checkmark"></span>
+                        Ultrasonic Welding (EV)
+                      </label>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="tape_wrap" value="true">
+                        <span class="checkmark"></span>
+                        Tape Wrapping / Convolute Tubing
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group" style="flex: 1;">
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="testing" value="true" checked>
+                        <span class="checkmark"></span>
+                        Full Testing (Continuity + Hipot)
+                      </label>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                      <label class="form-checkbox">
+                        <input type="checkbox" name="labeling" value="true">
+                        <span class="checkmark"></span>
+                        Wire Labels / Markers
+                      </label>
+                    </div>
+                  </div>
+                </fieldset>
+
+                <!-- Customer Info -->
+                <fieldset class="form-group" style="border: 1px solid var(--border-primary); border-radius: var(--radius-lg); padding: var(--space-lg); margin-bottom: var(--space-lg);">
+                  <legend class="form-label" style="font-size: 1rem; padding: 0 var(--space-sm);">Your Details</legend>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="customer_name" class="form-label">Full Name <span class="required" aria-hidden="true">*</span></label>
+                      <input type="text" id="customer_name" name="customer_name" class="form-input" required autocomplete="name" aria-required="true" placeholder="John Doe">
+                      <span class="form-error" aria-live="polite"></span>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="customer_email" class="form-label">Email <span class="required" aria-hidden="true">*</span></label>
+                      <input type="email" id="customer_email" name="customer_email" class="form-input" required autocomplete="email" aria-required="true" placeholder="john@example.com">
+                      <span class="form-error" aria-live="polite"></span>
+                    </div>
+                    <div class="form-group">
+                      <label for="customer_phone" class="form-label">Phone <span class="required" aria-hidden="true">*</span></label>
+                      <input type="tel" id="customer_phone" name="customer_phone" class="form-input" required autocomplete="tel" placeholder="+91 XXXXX XXXXX" aria-required="true">
+                      <span class="form-error" aria-live="polite"></span>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="company_name" class="form-label">Company Name</label>
+                    <input type="text" id="company_name" name="company_name" class="form-input" autocomplete="organization" placeholder="ABC Automotive Pvt Ltd">
+                    <span class="form-error" aria-live="polite"></span>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="delivery_location" class="form-label">Delivery Location <span class="required" aria-hidden="true">*</span></label>
+                    <input type="text" id="delivery_location" name="delivery_location" class="form-input" required autocomplete="address-line1" aria-required="true" placeholder="Chennai, Tamil Nadu, India" value="Chennai, Tamil Nadu, India">
+                    <span class="form-error" aria-live="polite"></span>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="gstin" class="form-label">GSTIN (for accurate GST calculation)</label>
+                    <input type="text" id="gstin" name="gstin" class="form-input" placeholder="33AAECS1234F1Z5" maxlength="15" style="text-transform: uppercase;">
+                    <span class="form-error" aria-live="polite"></span>
+                    <small style="color: var(--text-muted);">Enter GSTIN for accurate CGST/SGST/IGST calculation</small>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="special_requirements" class="form-label">Special Requirements / Notes</label>
+                    <textarea id="special_requirements" name="special_requirements" class="form-input" rows="3" placeholder="Any specific requirements, certifications, standards, or notes..."></textarea>
+                    <span class="form-error" aria-live="polite"></span>
+                  </div>
+                </fieldset>
+
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;" id="generate-quote-btn">
+                  <span class="btn-text">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    Generate Quotation
+                  </span>
+                  <span class="btn-loading" style="display: none;">
+                    <svg class="spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path></svg>
+                    AI Calculating...
+                  </span>
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Quote Result / Info Panel -->
+          <div>
+            <div id="quote-result" class="card" style="display: none; position: sticky; top: 100px; max-height: calc(100vh - 120px); overflow-y: auto;">
+              <!-- Quote result will be rendered here by JavaScript -->
+            </div>
+
+            <!-- Info Panel (shown when no quote) -->
+            <div id="quote-info" class="card" style="position: sticky; top: 100px;">
+              <h3 style="margin-bottom: var(--space-lg); display: flex; align-items: center; gap: var(--space-sm);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-electric-blue)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+                How It Works
+              </h3>
+              
+              <div style="display: flex; flex-direction: column; gap: var(--space-lg);">
+                <div style="display: flex; gap: var(--space-md);">
+                  <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--bg-primary); font-weight: 700;">1</div>
+                  <div>
+                    <h4 style="margin-bottom: var(--space-xs);">Enter Specifications</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9375rem;">Fill in harness type, wire count, gauge, connectors, length, and quantity</p>
+                  </div>
+                </div>
+                
+                <div style="display: flex; gap: var(--space-md);">
+                  <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--bg-primary); font-weight: 700;">2</div>
+                  <div>
+                    <h4 style="margin-bottom: var(--space-xs);">AI Calculates Instantly</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9375rem;">Our AI agent fetches real-time material prices, calculates labor, applies GST, and optimizes margins</p>
+                  </div>
+                </div>
+                
+                <div style="display: flex; gap: var(--space-md);">
+                  <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--bg-primary); font-weight: 700;">3</div>
+                  <div>
+                    <h4 style="margin-bottom: var(--space-xs);">Get Detailed Quote</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9375rem;">Receive itemized breakdown with material costs, labor, overheads, GST, and final price</p>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top: var(--space-xl); padding-top: var(--space-lg); border-top: 1px solid var(--border-primary);">
+                <h4 style="margin-bottom: var(--space-md);">What's Included in Every Quote</h4>
+                <ul style="list-style: none; color: var(--text-secondary); font-size: 0.9375rem; line-height: 2; display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xs);">
+                  <li>✓ Copper wire at live LME rates</li>
+                  <li>✓ Connector & terminal pricing</li>
+                  <li>✓ Insulation & sleeving materials</li>
+                  <li>✓ Labor (cut, strip, crimp, assemble)</li>
+                  <li>✓ Testing & quality control</li>
+                  <li>✓ Packaging & logistics</li>
+                  <li>✓ Factory overheads & margins</li>
+                  <li>✓ CGST + SGST / IGST (Tamil Nadu)</li>
+                </ul>
+              </div>
+
+              <div style="margin-top: var(--space-xl); padding: var(--space-lg); background: var(--bg-secondary); border-radius: var(--radius-lg);">
+                <h4 style="margin-bottom: var(--space-sm); color: var(--color-yellow-spark);">⚡ AI Agent Capabilities</h4>
+                <ul style="list-style: none; color: var(--text-secondary); font-size: 0.875rem; line-height: 2; display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xs);">
+                  <li>→ Multi-supplier price comparison</li>
+                  <li>→ Profit & loss optimization</li>
+                  <li>→ TN Labour Welfare compliance</li>
+                  <li>→ ESI/EPF/Gratuity calculations</li>
+                  <li>→ Machinery recommendation</li>
+                  <li>→ Inventory reorder alerts</li>
+                  <li>→ Production workflow generation</li>
+                  <li>→ Export documentation support</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sample Quote Preview -->
+    <section class="section" style="background: var(--bg-secondary);" aria-labelledby="sample-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="sample-title" class="section-title">Sample Quotation Preview</h2>
+          <p class="section-subtitle">See what a professional Segan Industry quotation looks like</p>
+        </div>
+
+        <div class="card" style="max-width: 800px; margin: 0 auto; overflow: hidden;">
+          <div style="background: var(--gradient-primary); color: var(--bg-primary); padding: var(--space-xl);">
+            <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: var(--space-md);">
+              <div>
+                <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: var(--space-xs);">QUOTATION</div>
+                <div style="opacity: 0.9; font-size: 0.875rem;">SI/QT/2024-25/001234</div>
+              </div>
+              <div style="text-align: right;">
+                <div style="opacity: 0.9; font-size: 0.875rem;">Date: 22-Jul-2024</div>
+                <div style="opacity: 0.9; font-size: 0.875rem;">Valid Until: 21-Aug-2024</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding: var(--space-xl);">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-xl); margin-bottom: var(--space-xl);">
+              <div>
+                <h4 style="color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-sm);">From</h4>
+                <address style="font-style: normal; line-height: 1.8; color: var(--text-secondary);">
+                  <strong>Segan Industry Private Limited</strong><br>
+                  Plot No. 45, SIDCO Industrial Estate<br>
+                  Ambattur, Chennai - 600058<br>
+                  Tamil Nadu, India<br>
+                  GSTIN: 33AAECS1234F1Z5
+                </address>
+              </div>
+              <div>
+                <h4 style="color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-sm);">To</h4>
+                <address style="font-style: normal; line-height: 1.8; color: var(--text-secondary);">
+                  <strong>ABC Automotive Pvt Ltd</strong><br>
+                  123 Industrial Area, Phase 2<br>
+                  Chennai - 600032<br>
+                  Tamil Nadu, India<br>
+                  GSTIN: 33AABCA5678D1Z2
+                </address>
+              </div>
+            </div>
+
+            <div style="overflow-x: auto; margin-bottom: var(--space-xl);">
+              <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem;">
+                <thead>
+                  <tr style="background: var(--bg-tertiary); border-bottom: 2px solid var(--border-primary);">
+                    <th style="text-align: left; padding: var(--space-md); font-weight: 600;">#</th>
+                    <th style="text-align: left; padding: var(--space-md); font-weight: 600;">Description</th>
+                    <th style="text-align: center; padding: var(--space-md); font-weight: 600;">HSN/SAC</th>
+                    <th style="text-align: right; padding: var(--space-md); font-weight: 600;">Qty</th>
+                    <th style="text-align: right; padding: var(--space-md); font-weight: 600;">Unit</th>
+                    <th style="text-align: right; padding: var(--space-md); font-weight: 600;">Rate (₹)</th>
+                    <th style="text-align: right; padding: var(--space-md); font-weight: 600;">Amount (₹)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="border-bottom: 1px solid var(--border-primary);">
+                    <td style="padding: var(--space-md);">1</td>
+                    <td style="padding: var(--space-md);"><strong>4-Wheeler Body Harness - 48 Circuits</strong><br><small style="color: var(--text-secondary);">Wire: 0.5/0.75/1.0 mm² | Connectors: 12 sealed | Length: 4.2m | Tape wrapped</small></td>
+                    <td style="text-align: center; padding: var(--space-md);">8544</td>
+                    <td style="text-align: right; padding: var(--space-md);">500</td>
+                    <td style="text-align: right; padding: var(--space-md);">Nos</td>
+                    <td style="text-align: right; padding: var(--space-md);">1,245.00</td>
+                    <td style="text-align: right; padding: var(--space-md); font-weight: 600;">6,22,500.00</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid var(--border-primary);">
+                    <td style="padding: var(--space-md);">2</td>
+                    <td style="padding: var(--space-md);"><strong>Design & Engineering Support</strong><br><small style="color: var(--text-secondary);">Schematic, BOM, DFM analysis</small></td>
+                    <td style="text-align: center; padding: var(--space-md);">9983</td>
+                    <td style="text-align: right; padding: var(--space-md);">1</td>
+                    <td style="text-align: right; padding: var(--space-md);">Lot</td>
+                    <td style="text-align: right; padding: var(--space-md);">25,000.00</td>
+                    <td style="text-align: right; padding: var(--space-md); font-weight: 600;">25,000.00</td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid var(--border-primary);">
+                    <td style="padding: var(--space-md);">3</td>
+                    <td style="padding: var(--space-md);"><strong>Prototype Samples (5 pcs)</strong><br><small style="color: var(--text-secondary);">Including testing & validation</small></td>
+                    <td style="text-align: center; padding: var(--space-md);">8544</td>
+                    <td style="text-align: right; padding: var(--space-md);">5</td>
+                    <td style="text-align: right; padding: var(--space-md);">Nos</td>
+                    <td style="text-align: right; padding: var(--space-md);">1,500.00</td>
+                    <td style="text-align: right; padding: var(--space-md); font-weight: 600;">7,500.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: var(--space-xl);">
+              <div style="flex: 1; max-width: 350px;"></div>
+              <div style="width: 350px;">
+                <div style="display: flex; justify-content: space-between; padding: var(--space-sm) 0; border-bottom: 1px solid var(--border-primary);">
+                  <span style="color: var(--text-secondary);">Subtotal</span>
+                  <span>₹ 6,55,000.00</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: var(--space-sm) 0; border-bottom: 1px solid var(--border-primary);">
+                  <span style="color: var(--text-secondary);">CGST (9%)</span>
+                  <span>₹ 58,950.00</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: var(--space-sm) 0; border-bottom: 1px solid var(--border-primary);">
+                  <span style="color: var(--text-secondary);">SGST (9%)</span>
+                  <span>₹ 58,950.00</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: var(--space-sm) 0; border-bottom: 1px solid var(--border-primary);">
+                  <span style="color: var(--text-secondary);">Freight & Packing</span>
+                  <span>₹ 12,500.00</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: var(--space-md) 0; border-top: 2px solid var(--color-electric-blue); font-weight: 700; font-size: 1.125rem; color: var(--color-electric-blue);">
+                  <span>Grand Total</span>
+                  <span>₹ 7,85,400.00</span>
+                </div>
+                <p style="margin-top: var(--space-sm); font-size: 0.75rem; color: var(--text-muted); text-align: right;">Rupees Seven Lakh Eighty-Five Thousand Four Hundred Only</p>
+              </div>
+            </div>
+          </div>
+
+          <div style="background: var(--bg-secondary); padding: var(--space-lg); border-top: 1px solid var(--border-primary); font-size: 0.8125rem; color: var(--text-secondary);">
+            <h4 style="margin-bottom: var(--space-sm); color: var(--text-primary);">Terms & Conditions:</h4>
+            <ul style="margin: 0; padding-left: var(--space-lg); line-height: 2;">
+              <li>Payment: 30% advance, 70% before dispatch</li>
+              <li>Lead Time: 4-6 weeks from PO confirmation</li>
+              <li>Testing: 100% Continuity + Hipot @ 1500V DC</li>
+              <li>Warranty: 12 months against manufacturing defects</li>
+              <li>GST: As applicable (CGST 9% + SGST 9% for Tamil Nadu)</li>
+              <li>Force Majeure: Standard clause applies</li>
+              <li>Jurisdiction: Chennai Courts only</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section" style="background: var(--gradient-card); border-top: 1px solid var(--border-primary);">
+      <div class="container">
+        <div class="card" style="text-align: center; max-width: 700px; margin: 0 auto; background: var(--gradient-primary); color: var(--bg-primary);">
+          <h2 style="font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom: var(--space-md);">Ready for Your Custom Quote?</h2>
+          <p style="opacity: 0.9; margin-bottom: var(--space-xl);">Fill out the form above or contact our sales team directly for complex requirements.</p>
+          <div class="flex gap-md justify-center flex-wrap">
+            <a href="contact.html" class="btn btn-secondary btn-lg" style="border-color: var(--bg-primary); color: var(--bg-primary);">
+              Contact Sales Team
+            </a>
+            <a href="tel:+914426251234" class="btn btn-lg" style="background: var(--bg-primary); color: var(--color-electric-blue);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+              Call: +91 44 2625 1234
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo" aria-hidden="true">SI</div>
+          <p class="footer-tagline">Segan Industry Private Limited - Your trusted partner for precision wiring harness manufacturing and automation solutions in Chennai, Tamil Nadu.</p>
+          <div class="footer-social">
+            <a href="#" class="social-link" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+            <a href="#" class="social-link" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
+            <a href="#" class="social-link" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg></a>
+            <a href="mailto:info@seganindustry.com" class="social-link" aria-label="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></a>
+          </div>
+        </div>
+        <div>
+          <h3 class="footer-title">Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="automation.html">Automation</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="quote.html">Get a Quote</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="footer-title">Products</h3>
+          <ul class="footer-links">
+            <li><a href="products.html?category=Automotive">Automotive Harnesses</a></li>
+            <li><a href="products.html?category=EV">EV Harnesses</a></li>
+            <li><a href="products.html?category=Industrial">Industrial Harnesses</a></li>
+            <li><a href="products.html?category=Components">Connectors & Terminals</a></li>
+            <li><a href="products.html?category=Custom">Custom Solutions</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="footer-title">Automation</h3>
+          <ul class="footer-links">
+            <li><a href="automation.html">AI Quotation Agent</a></li>
+            <li><a href="automation.html">Workflow Automation</a></li>
+            <li><a href="automation.html">Inventory Management</a></li>
+            <li><a href="automation.html">Quality Automation</a></li>
+            <li><a href="automation.html">Production Tracking</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="footer-title">Contact Us</h3>
+          <ul class="footer-contact">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span>Plot No. 45, SIDCO Industrial Estate, Ambattur, Chennai - 600058, Tamil Nadu, India</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg><span>+91 44 2625 1234 / +91 98765 43210</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg><span>info@seganindustry.com</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg><span>Mon - Sat: 9:00 AM - 6:00 PM IST</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copyright">&copy; 2024 Segan Industry Private Limited. All rights reserved.</p>
+        <div class="footer-legal"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">GST Compliance</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="chat-widget" aria-label="AI Assistant">
+    <button class="chat-toggle" aria-label="Open AI Assistant" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="M9 7h6"></path><path d="M9 11h6"></path></svg></button>
+    <div class="chat-window" role="dialog" aria-label="AI Assistant Chat">
+      <div class="chat-header"><div class="chat-title"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path></svg><span>Segan AI Assistant</span><span class="chat-status" aria-label="Online"></span></div><button class="chat-close" aria-label="Close chat"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button></div>
+      <div class="chat-messages" role="log" aria-live="polite"><div class="chat-message bot"><div class="chat-message-avatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path></svg></div><div class="chat-message-content">Hello! I'm your Segan Industry AI Assistant. I can help you with quotations, product information, automation services, GST calculations, and more. How can I assist you today?</div></div></div>
+      <div class="chat-input-area"><div class="chat-input-wrapper"><input type="text" class="chat-input" placeholder="Ask me anything..." aria-label="Chat message" autocomplete="off"><button class="chat-send" aria-label="Send message"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></button></div></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
