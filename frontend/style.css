@@ -2573,3 +2573,47 @@ textarea:focus-visible {
   --border-primary: #232f66;
   background: #010315;
 }
+
+/* ============================================================
+   Segan enhancement v2.3 - logo as background WATERMARK
+   (founder, 2026-10-17): home hero logo becomes a large, faint,
+   centered watermark; every inner-page banner gets a subtle
+   logo watermark ghosted on its right side.
+   ============================================================ */
+.hero-logo {
+  width: min(1050px, 96%);
+  right: 50%;
+  transform: translate(50%, -50%);
+  opacity: 0.16;
+}
+@media (max-width: 900px) {
+  .hero-logo { width: 150%; right: 50%; top: 36%; opacity: 0.13; }
+}
+.products-hero, .automation-hero, .quote-hero {
+  position: relative;
+  overflow: hidden;
+}
+.products-hero::after, .automation-hero::after, .quote-hero::after {
+  content: "";
+  position: absolute;
+  right: -70px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 430px;
+  height: 430px;
+  background: url("assets/logo-icon-512.png") center / contain no-repeat;
+  opacity: 0.07;
+  pointer-events: none;
+}
+.products-hero > *, .automation-hero > *, .quote-hero > * {
+  position: relative;
+  z-index: 1;
+}
+@media (max-width: 768px) {
+  .products-hero::after, .automation-hero::after, .quote-hero::after {
+    width: 300px;
+    height: 300px;
+    right: -90px;
+    opacity: 0.06;
+  }
+}
