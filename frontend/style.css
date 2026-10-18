@@ -2271,3 +2271,183 @@ input, textarea, select {
   0%, 100% { box-shadow: var(--shadow-lg), var(--shadow-glow-blue); }
   50% { box-shadow: var(--shadow-lg), 0 0 40px rgba(0, 212, 255, 0.6); }
 }
+/* ============================================================
+   ENHANCEMENT LAYER — 2026-10-17
+   (appended for the Segan logo + design refresh; the original
+   45KB design language above is untouched)
+   ============================================================ */
+
+/* --- A) New Segan logo in header, footer and hero --- */
+.nav-logo-img {
+  height: 44px;
+  width: auto;
+  border-radius: 10px;
+  display: block;
+  box-shadow: 0 0 12px rgba(0, 212, 255, 0.25);
+}
+
+.footer-logo-img {
+  height: 52px;
+  width: auto;
+  border-radius: 12px;
+  display: block;
+  margin-bottom: var(--space-md, 1rem);
+  box-shadow: 0 0 16px rgba(0, 212, 255, 0.2);
+}
+
+/* Wide logo above the index hero headline: navy bg blends into the
+   dark theme, electric-blue/gold soft glow makes it feel lit. */
+.hero-logo {
+  max-width: 400px;
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  margin-bottom: var(--space-xl, 2rem);
+  box-shadow:
+    0 0 36px rgba(0, 212, 255, 0.22),
+    0 0 90px rgba(255, 215, 0, 0.08),
+    0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+/* --- E) Card hover: lift + electric accent border --- */
+.card,
+.product-card,
+.automation-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.card:hover,
+.product-card:hover,
+.automation-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-electric-blue);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5), 0 0 18px rgba(0, 212, 255, 0.18);
+}
+
+/* --- E) Button hover states --- */
+.btn {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 212, 255, 0.28);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* --- E) Keyboard focus visibility (a11y) --- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-electric-blue);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* --- E) Section spacing polish --- */
+.section {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+.section-header {
+  margin-bottom: 3rem;
+}
+
+/* --- Automation "Learn More" inline details --- */
+.automation-details {
+  margin-top: 1.25rem;
+  padding: 1.25rem;
+  border-top: 1px solid var(--border-primary);
+  border-radius: 0 0 12px 12px;
+  background: rgba(0, 212, 255, 0.04);
+}
+
+.automation-details h4 {
+  margin: 0.75rem 0 0.5rem;
+  font-size: 0.95rem;
+  color: var(--color-electric-blue);
+}
+
+.automation-details h4:first-child {
+  margin-top: 0;
+}
+
+.automation-details ul {
+  margin: 0 0 0.5rem 1.1rem;
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  line-height: 1.8;
+}
+
+.automation-details p {
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+}
+
+.automation-details .btn {
+  margin-top: 1rem;
+}
+
+/* --- RFQ summary table tidy-up --- */
+.quote-item {
+  align-items: baseline;
+}
+
+.quote-id {
+  color: var(--color-electric-blue);
+}
+
+/* --- E) Print stylesheet polish for the RFQ summary --- */
+@media print {
+  .chat-widget,
+  .chat-toggle,
+  .quote-actions,
+  #quote-info {
+    display: none !important;
+  }
+
+  .quote-item {
+    border-bottom: 1px solid #ddd;
+  }
+}
+
+/* --- Chat quick-reply starter chips (2026-10-17) --- */
+.chat-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-primary);
+  background: rgba(0, 212, 255, 0.03);
+}
+
+.chat-chip {
+  font-size: 0.8125rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-accent);
+  background: transparent;
+  color: var(--color-electric-blue-light);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.chat-chip:hover {
+  background: var(--color-electric-blue);
+  color: var(--bg-primary);
+  transform: translateY(-1px);
+}
+
+/* --- Chat window: fit small phones (2026-10-17) --- */
+@media (max-width: 480px) {
+  .chat-window {
+    width: calc(100vw - 24px);
+    right: 12px;
+  }
+}

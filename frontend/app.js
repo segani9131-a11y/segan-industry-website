@@ -4,8 +4,17 @@
    ======================================== */
 
 // Configuration
+// NOTE (2026-10-17): the legacy website API on Railway (segan-industry-website-production.up.railway.app)
+// is retired — Railway returns 404 "Application not found" for every endpoint. All website features now
+// work client-side; the chat widget uses the public, auth-free website chat endpoint below.
+// (The /api/v1/agent/* endpoints require a Bearer token and their CORS does not allow the
+// website origin, so the widget intentionally does NOT use them.)
 const CONFIG = {
-  apiBaseUrl: 'https://segan-industry-website-production.up.railway.app/api',
+  // Public website chat endpoint: POST {message, session_id} -> {reply}
+  liveChatUrl: 'https://seganindustry.duckdns.org/api/v1/website/chat',
+  // Public website enquiry endpoints (auth-free; CORS-enabled for the website)
+  liveQuoteUrl: 'https://seganindustry.duckdns.org/api/v1/website/quote',
+  liveContactUrl: 'https://seganindustry.duckdns.org/api/v1/website/contact',
   companyName: 'Segan Industry Private Limited',
   gstin: '33AAECS1234F1Z5'
 };
@@ -131,30 +140,10 @@ function getUrlParam(param) {
 // ========================================
 
 const api = {
+  // The legacy website API is retired (Railway app gone — 404 for every endpoint).
+  // Fail fast so page loaders fall through to their built-in static fallbacks cleanly.
   async request(endpoint, options = {}) {
-    const url = `${CONFIG.apiBaseUrl}${endpoint}`;
-    const defaultOptions = {
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
-    };
-    
-    const config = { ...defaultOptions, ...options };
-    
-    try {
-      const response = await fetch(url, config);
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.detail || `API Error: ${response.status}`);
-      }
-      
-      return data;
-    } catch (error) {
-      console.error(`API Error (${endpoint}):`, error);
-      throw error;
-    }
+    throw new Error(`Legacy website API retired — using static fallback (${endpoint})`);
   },
 
   // Quotation APIs
@@ -326,6 +315,15 @@ function initNavigation() {
   });
 }
 
+/**
+ * Escape HTML and preserve line breaks for agent chat replies
+ */
+function safeChatText(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML.replace(/\n/g, '<br>');
+}
+
 // ========================================
 // CHAT WIDGET
 // ========================================
@@ -340,7 +338,32 @@ function initChatWidget() {
 
   if (!chatToggle || !chatWindow) return;
 
-  let sessionId = null;
+  // Per-page-load session id, sent in every chat message body for the
+  // backend conversation log.
+  let sessionId = (typeof crypto !== 'undefined' && crypto.randomUUID)
+    ? crypto.randomUUID()
+    : 'web-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+
+  // Quick-reply starter chips (sent as user messages on click)
+  const chatChips = document.createElement('div');
+  chatChips.className = 'chat-chips';
+  ['What products do you make?', 'How do I get a quote?', 'Where are you located?'].forEach(text => {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'chat-chip';
+    chip.textContent = text;
+    chip.addEventListener('click', () => {
+      chatInput.value = text;
+      sendMessage();
+    });
+    chatChips.appendChild(chip);
+  });
+  const chatHeader = chatWindow.querySelector('.chat-header');
+  if (chatHeader) chatHeader.after(chatChips);
+
+  function hideChatChips() {
+    if (chatChips) chatChips.style.display = 'none';
+  }
 
   chatToggle.addEventListener('click', () => {
     chatWindow.classList.toggle('open');
@@ -377,6 +400,7 @@ function initChatWidget() {
     if (!message) return;
 
     addMessage(message, true);
+    hideChatChips();
     chatInput.value = '';
     chatInput.disabled = true;
     chatSend.disabled = true;
@@ -392,15 +416,26 @@ function initChatWidget() {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
     try {
-      const response = await api.chatWithAgent(message, {}, sessionId);
-      sessionId = response.session_id;
-      
+      // Public website chat endpoint (no auth; CORS-enabled for the website).
+      const response = await fetch(CONFIG.liveChatUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message, session_id: sessionId })
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+
       typingDiv.remove();
-      addMessage(response.response);
+      hideChatChips();
+      addMessage(safeChatText(data.reply || ''));
     } catch (error) {
+      console.info('Website chat endpoint unavailable; showing contact fallback.', error);
       typingDiv.remove();
-      addMessage('Sorry, I encountered an error. Please try again.');
-      showToast('Failed to get AI response', 'error');
+      addMessage(
+        'Thanks for reaching out! Our assistant is temporarily unavailable, but our team ' +
+        'will be glad to help — email us at <a href="mailto:info@seganindustry.com">info@seganindustry.com</a> ' +
+        'or visit our <a href="contact.html">contact page</a>.'
+      );
     } finally {
       chatInput.disabled = false;
       chatSend.disabled = false;
@@ -478,7 +513,8 @@ async function initProductsPage() {
     renderProducts(allProducts);
     initProductTabs();
   } catch (error) {
-    showToast('Failed to load products', 'error');
+    // Legacy API retired — static fallback is the normal path, not an error.
+    console.info('Products: using static fallback.');
     renderProductFallback();
   } finally {
     showLoading(document.querySelector('.product-grid') || document.body, false);
@@ -509,8 +545,9 @@ function renderProducts(products) {
           ).join('') : ''}
         </div>
         <div class="product-footer">
-          <span class="product-price">${product.base_price_range}</span>
-          <span class="product-moq">MOQ: ${formatNumber(product.min_order_quantity)}</span>
+          ${product.base_price_range ? `<span class="product-price">${product.base_price_range}</span>` : ''}
+          ${product.min_order_quantity ? `<span class="product-moq">MOQ: ${formatNumber(product.min_order_quantity)}</span>` : ''}
+          <a href="quote.html?product=${product.id}" class="btn btn-outline btn-sm">Request Quote</a>
         </div>
       </div>
     </article>
@@ -556,20 +593,27 @@ function filterProducts(category) {
   renderProducts(filtered);
 }
 
+function getStaticProducts() {
+  // Static catalog (used everywhere now that the legacy website API is retired).
+  // Generic names/descriptions only — NO prices, NO invented specs/certifications.
+  return [
+    { id: 'PRD001', name: 'Automotive Wiring Harness — 2 Wheeler', description: 'Complete wiring harness for motorcycles and scooters.', category: 'Automotive' },
+    { id: 'PRD002', name: 'Automotive Wiring Harness — 4 Wheeler', description: 'Full vehicle wiring harness for passenger cars.', category: 'Automotive' },
+    { id: 'PRD003', name: 'Commercial Vehicle Wiring Harness', description: 'Heavy-duty wiring harness for commercial vehicles.', category: 'Automotive' },
+    { id: 'PRD004', name: 'EV High-Voltage Battery Harness', description: 'High-voltage harness for EV battery systems.', category: 'EV' },
+    { id: 'PRD005', name: 'EV Low-Voltage Control Harness', description: 'Low-voltage control and signal harness for electric vehicles.', category: 'EV' },
+    { id: 'PRD006', name: 'EV Charging Port Harness', description: 'Charging inlet and port wiring harness for electric vehicles.', category: 'EV' },
+    { id: 'PRD007', name: 'Industrial Control Panel Wiring Harness', description: 'Panel wiring harness for industrial control systems.', category: 'Industrial' },
+    { id: 'PRD008', name: 'Industrial Sensor & Actuator Harness', description: 'Sensor and actuator wiring harness for factory automation.', category: 'Industrial' },
+    { id: 'PRD009', name: 'Connector & Terminal Assemblies', description: 'Connector and terminal sub-assemblies built to drawing.', category: 'Components' },
+    { id: 'PRD010', name: 'Custom Cable Assemblies', description: 'Custom cable assemblies made to customer specifications.', category: 'Components' },
+    { id: 'PRD011', name: 'Custom-Engineered Wiring Harness', description: 'Fully custom wiring harness engineered to your drawings.', category: 'Custom' }
+  ];
+}
+
 function renderProductFallback() {
   // Fallback static products if API fails
-  allProducts = [
-    {
-      id: 'PRD001',
-      name: 'Automotive Wiring Harness - 2 Wheeler',
-      description: 'Complete wiring harness for motorcycles and scooters',
-      category: 'Automotive',
-      specifications: { voltage: '12V DC', wire_gauge_range: '0.5 - 2.5 mm²' },
-      base_price_range: '₹800 - ₹2,500 per set',
-      min_order_quantity: 50
-    },
-    // ... add more fallback products
-  ];
+  allProducts = getStaticProducts();
   renderProducts(allProducts);
 }
 
@@ -581,11 +625,18 @@ async function initProductDetailPage() {
   const productId = getUrlParam('id');
   if (!productId) return;
 
-  try {
-    const product = await api.getProduct(productId);
+  // Legacy API retired — resolve from the static catalog.
+  const catalog = getStaticProducts();
+  const product = catalog.find(p => p.id === productId);
+  if (product) {
     renderProductDetail(product);
-  } catch (error) {
-    showToast('Failed to load product details', 'error');
+  } else {
+    const container = document.querySelector('.product-detail');
+    if (container) {
+      container.innerHTML = '<div class="card"><h3>Product not found</h3>' +
+        '<p>This product is not in our current catalog.</p>' +
+        '<a href="products.html" class="btn btn-primary">Back to Products</a></div>';
+    }
   }
 }
 
@@ -604,7 +655,7 @@ function renderProductDetail(product) {
         <div class="product-image-large">
           ${getProductIcon(product.category)}
         </div>
-        <div class="product-price-large">${product.base_price_range}</div>
+        ${product.base_price_range ? `<div class="product-price-large">${product.base_price_range}</div>` : ''}
       </div>
       <div class="product-detail-sidebar">
         <div class="card">
@@ -633,8 +684,8 @@ function renderProductDetail(product) {
         <div class="card">
           <h3>Order Information</h3>
           <dl class="order-info">
-            <div><dt>Min Order Quantity</dt><dd>${formatNumber(product.min_order_quantity)} units</dd></div>
-            <div><dt>Lead Time</dt><dd>${product.lead_time_days} days</dd></div>
+            ${product.min_order_quantity ? `<div><dt>Min Order Quantity</dt><dd>${formatNumber(product.min_order_quantity)} units</dd></div>` : ''}
+            ${product.lead_time_days ? `<div><dt>Lead Time</dt><dd>${product.lead_time_days} days</dd></div>` : ''}
           </dl>
           <a href="quote.html?product=${product.id}" class="btn btn-primary btn-lg" style="width: 100%; margin-top: var(--space-md);">
             Request Quote
@@ -649,13 +700,16 @@ function renderProductDetail(product) {
 // AUTOMATION PAGE
 // ========================================
 
+let automationServicesCache = [];
+
 async function initAutomationPage() {
   try {
     showLoading(document.querySelector('.automation-grid') || document.body, true);
     const services = await api.getAutomationServices();
     renderAutomationServices(services);
   } catch (error) {
-    showToast('Failed to load automation services', 'error');
+    // Legacy API retired — static fallback is the normal path, not an error.
+    console.info('Automation services: using static fallback.');
     renderAutomationFallback();
   } finally {
     showLoading(document.querySelector('.automation-grid') || document.body, false);
@@ -665,6 +719,7 @@ async function initAutomationPage() {
 function renderAutomationServices(services) {
   const grid = document.querySelector('.automation-grid');
   if (!grid) return;
+  automationServicesCache = services;
 
   grid.innerHTML = services.map(service => `
     <article class="card automation-card">
@@ -722,8 +777,30 @@ function renderAutomationFallback() {
 }
 
 function showAutomationModal(serviceId) {
-  // Implementation for modal
-  showToast('Detailed view coming soon!', 'info');
+  // Inline details toggle — data already exists on the card's service entry.
+  const service = automationServicesCache.find(svc => svc.id === serviceId);
+  const btn = document.querySelector(`.automation-cta[data-service="${serviceId}"]`);
+  const card = btn ? btn.closest('.automation-card') : null;
+  if (!service || !card) return;
+
+  let details = card.querySelector('.automation-details');
+  if (details) {
+    details.remove();
+    btn.textContent = 'Learn More';
+    return;
+  }
+
+  details = document.createElement('div');
+  details.className = 'automation-details';
+  details.innerHTML = `
+    <h4>What is included</h4>
+    <ul>${(service.features || []).map(f => `<li>${escapeHtml(f)}</li>`).join('')}</ul>
+    <h4>Technologies</h4>
+    <p>${(service.technologies || []).map(escapeHtml).join(' · ')}</p>
+    <a href="quote.html" class="btn btn-primary">Request a Quote for this service</a>
+  `;
+  card.appendChild(details);
+  btn.textContent = 'Show Less';
 }
 
 // ========================================
@@ -735,7 +812,8 @@ async function initAboutPage() {
     const company = await api.getCompanyInfo();
     renderCompanyInfo(company);
   } catch (error) {
-    showToast('Failed to load company info', 'error');
+    // Legacy API retired; the about page carries its content statically.
+    console.info('Company info: using static page content.');
   }
 }
 
@@ -773,36 +851,73 @@ function initContactPage() {
 }
 
 async function submitContactForm(form) {
-  const submitBtn = form.querySelector('button[type="submit"]');
-  const messageDiv = form.querySelector('.form-message');
-  
-  showLoading(submitBtn, true);
-  messageDiv.style.display = 'none';
-  messageDiv.className = 'form-message';
-
-  const formData = new FormData(form);
-  const data = {
-    name: formData.get('name'),
-    email: formData.get('email'),
-    phone: formData.get('phone'),
-    company: formData.get('company'),
-    contact_type: formData.get('contact_type'),
-    subject: formData.get('subject'),
-    message: formData.get('message')
+  // Form status element: create it if the page doesn't have one.
+  let messageDiv = form.querySelector('.form-message');
+  if (!messageDiv) {
+    messageDiv = document.createElement('div');
+    messageDiv.className = 'form-message';
+    messageDiv.style.display = 'none';
+    const submitBtnRef = form.querySelector('button[type="submit"]');
+    if (submitBtnRef) submitBtnRef.after(messageDiv); else form.prepend(messageDiv);
+  }
+  const showFormMessage = (type, text) => {
+    messageDiv.className = `form-message ${type}`;
+    messageDiv.textContent = text;
+    messageDiv.style.display = 'block';
   };
 
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const formData = new FormData(form);
+
+  // Map actual contact.html fields: firstName/lastName, inquiryType (no subject field).
+  const firstName = (formData.get('firstName') || '').toString().trim();
+  const lastName = (formData.get('lastName') || '').toString().trim();
+  const name = `${firstName} ${lastName}`.trim();
+  const email = (formData.get('email') || '').toString().trim();
+  const phone = (formData.get('phone') || '').toString().trim();
+  const company = (formData.get('company') || '').toString().trim();
+  const contactType = (formData.get('inquiryType') || 'Enquiry').toString();
+  const subject = contactType; // no dedicated subject field on the form
+  const message = (formData.get('message') || '').toString().trim();
+
+  if (!firstName || !email || !message) {
+    showFormMessage('error', 'Please fill in your first name, email and message before continuing.');
+    return;
+  }
+
+  const payload = { name, email, phone, company, contact_type: contactType, subject, message };
+
+  // Primary: capture to the founder's system via the public backend endpoint.
+  showLoading(submitBtn, true);
   try {
-    const response = await api.submitContact(data);
-    messageDiv.classList.add('success');
-    messageDiv.textContent = response.message;
-    messageDiv.style.display = 'block';
+    const response = await fetch(CONFIG.liveContactUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    showFormMessage('success', 'Message received! We will get back to you shortly.');
+    showToast('Message received! We will get back to you shortly.', 'success');
     form.reset();
-    showToast('Message sent successfully!', 'success');
   } catch (error) {
-    messageDiv.classList.add('error');
-    messageDiv.textContent = 'Failed to send message. Please try again.';
-    messageDiv.style.display = 'block';
-    showToast('Failed to send message', 'error');
+    // Fallback: open the visitor's email app with everything pre-filled so
+    // the enquiry is never lost. Honest wording — never claim it was "sent".
+    console.info('Contact endpoint unavailable; falling back to email app.', error);
+    const body = [
+      `Name: ${name}`,
+      `Email: ${email}`,
+      `Phone: ${phone || '-'}`,
+      `Company: ${company || '-'}`,
+      `Type: ${contactType}`,
+      '',
+      message
+    ].join('\n');
+
+    window.location.href =
+      `mailto:info@seganindustry.com?subject=${encodeURIComponent(`${contactType}`)}&body=${encodeURIComponent(body)}`;
+
+    showFormMessage('success', 'Our system is temporarily unavailable — your email app opened with the message ready to send. Just press Send so your enquiry is not lost.');
+    showToast('Email app opened with your message ready to send', 'success');
   } finally {
     showLoading(submitBtn, false);
   }
@@ -877,137 +992,185 @@ function isValidPhone(phone) {
   return /^[\+]?[(]?[0-9]{1,3}[)]?[-\s\.]?[(]?[0-9]{1,3}[)]?[-\s\.]?[0-9]{4,6}$/.test(phone);
 }
 
+// The legacy AI pricing API is retired — the quote page is now an RFQ (Request
+// for Quotation) flow: validate client-side, render a summary, and email it.
+let lastRFQ = null;
+
 async function generateQuote(form) {
   const submitBtn = form.querySelector('button[type="submit"]');
-  const resultContainer = document.querySelector('.quote-result');
-  const placeholder = resultContainer.querySelector('.quote-result-placeholder');
-  const content = resultContainer.querySelector('.quote-result-content');
-  
+  const resultContainer = document.getElementById('quote-result');
+  const infoPanel = document.getElementById('quote-info');
+
+  // Client-side validation (form uses novalidate, so do it explicitly)
+  if (!form.reportValidity()) {
+    showToast('Please complete the required fields.', 'error');
+    return;
+  }
+
   showLoading(submitBtn, true);
 
   const formData = new FormData(form);
-  
+
   // Collect checkbox values for special requirements
   const checkboxFields = ['shielding', 'waterproof', 'ultrasonic_weld', 'tape_wrap', 'testing', 'labeling'];
   const specialRequirements = [];
-  
+
   checkboxFields.forEach(field => {
     if (formData.get(field) === 'true') {
-      specialRequirements.push(field);
+      specialRequirements.push(field.replace(/_/g, ' '));
     }
   });
-  
+
   // Add any text special requirements
   const textRequirements = formData.get('special_requirements');
   if (textRequirements) {
     specialRequirements.push(textRequirements);
   }
-  
+
   const data = {
     customer_name: formData.get('customer_name'),
     customer_email: formData.get('customer_email'),
     customer_phone: formData.get('customer_phone'),
-    company_name: formData.get('company_name') || undefined,
+    company_name: formData.get('company_name') || '',
     harness_type: formData.get('harness_type'),
     quantity: parseInt(formData.get('quantity')),
     wire_length_meters: parseFloat(formData.get('wire_length_meters')),
     wire_gauge_mm2: parseFloat(formData.get('wire_gauge_mm2')),
     connector_count: parseInt(formData.get('connector_count')),
     terminal_count: parseInt(formData.get('terminal_count')),
-    special_requirements: specialRequirements.length > 0 ? specialRequirements.join(', ') : undefined,
+    special_requirements: specialRequirements.length > 0 ? specialRequirements.join(', ') : 'None',
     delivery_location: formData.get('delivery_location'),
     expected_delivery_days: parseInt(formData.get('expected_delivery_days')) || 30
   };
 
+  lastRFQ = data;
+
+  // Primary: capture the RFQ in the founder's system.
   try {
-    const quote = await api.generateQuote(data);
-    renderQuoteResult(quote, resultContainer, placeholder, content);
-    showToast('Quotation generated successfully!', 'success');
+    const response = await fetch(CONFIG.liveQuoteUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const result = await response.json().catch(() => ({}));
+    const ref = result.reference_id || result.id || result.quote_id;
+    renderRFQSummary(data, resultContainer);
+    if (infoPanel) infoPanel.style.display = 'none';
+    resultContainer.style.display = 'block';
+    showToast('Request received! Our team will contact you shortly.' + (ref ? ` Reference: ${ref}` : ''), 'success');
   } catch (error) {
-    showToast('Failed to generate quotation: ' + error.message, 'error');
+    // Fallback: keep the summary AND open the visitor's email app so the
+    // enquiry is never lost.
+    console.info('Quote endpoint unavailable; falling back to email app.', error);
+    renderRFQSummary(data, resultContainer);
+    if (infoPanel) infoPanel.style.display = 'none';
+    resultContainer.style.display = 'block';
+    showToast('Our system is temporarily unavailable — your email app is opening so the RFQ is not lost.', 'info');
+    sendRFQByEmail();
   } finally {
     showLoading(submitBtn, false);
   }
 }
 
-function renderQuoteResult(quote, container, placeholder, content) {
-  placeholder.style.display = 'none';
-  content.style.display = 'block';
-  content.classList.add('visible');
+function renderRFQSummary(data, container) {
+  // NOTE: no price estimates here — pricing is done by the Segan team, not automated.
+  const rows = [
+    ['Name', escapeHtml(data.customer_name)],
+    ['Email', escapeHtml(data.customer_email)],
+    ['Phone', escapeHtml(data.customer_phone)],
+    ['Company', escapeHtml(data.company_name || '-')],
+    ['Harness Type', escapeHtml(data.harness_type)],
+    ['Quantity', formatNumber(data.quantity)],
+    ['Wire Length (m)', isNaN(data.wire_length_meters) ? '-' : data.wire_length_meters],
+    ['Wire Gauge (mm²)', isNaN(data.wire_gauge_mm2) ? '-' : data.wire_gauge_mm2],
+    ['Connectors', formatNumber(data.connector_count)],
+    ['Terminals', formatNumber(data.terminal_count)],
+    ['Special Requirements', escapeHtml(data.special_requirements)],
+    ['Delivery Location', escapeHtml(data.delivery_location || 'Chennai, Tamil Nadu, India')],
+    ['Expected Delivery (days)', data.expected_delivery_days],
+  ];
 
-  const gst = quote.gst_breakdown;
-  const isInterstate = gst.is_interstate;
-
-  content.innerHTML = `
+  container.innerHTML = `
     <div class="quote-header">
-      <div class="quote-id">${quote.quotation_id}</div>
-      <div class="quote-date">Date: ${new Date(quote.date).toLocaleDateString('en-IN')} | Valid for ${quote.validity_days} days</div>
+      <div class="quote-id">Request for Quotation</div>
+      <div class="quote-date">Date: ${new Date().toLocaleDateString('en-IN')}</div>
     </div>
     <div class="quote-customer">
-      <h4>${quote.customer_name}</h4>
-      <p>${quote.customer_email} | ${quote.harness_type} Harness</p>
+      <h4>${escapeHtml(data.customer_name)}</h4>
+      <p>${escapeHtml(data.customer_email)} | ${escapeHtml(data.harness_type)} Harness</p>
     </div>
     <div class="quote-items">
-      <div class="quote-item"><span>Description</span><span>Qty</span><span>Unit Price</span><span>Total</span></div>
-      ${quote.items.map(item => `
-        <div class="quote-item">
-          <span>${item.description}</span>
-          <span>${formatNumber(item.quantity)} ${item.unit}</span>
-          <span>${formatCurrency(item.unit_price)}</span>
-          <span>${formatCurrency(item.total_price)}</span>
-        </div>
-      `).join('')}
-      <div class="quote-item total-row">
-        <span>Subtotal</span><span></span><span></span><span>${formatCurrency(quote.subtotal)}</span>
-      </div>
-    </div>
-    <div class="quote-summary">
-      <div class="summary-row"><span>Subtotal</span><span>${formatCurrency(quote.subtotal)}</span></div>
-      <div class="summary-row"><span>Profit Margin (${quote.profit_margin_percent}%)</span><span>${formatCurrency(quote.profit_amount)}</span></div>
-      <div class="summary-row"><span>Overhead</span><span>${formatCurrency(quote.overhead_amount)}</span></div>
-      <div class="summary-row"><span>Contingency</span><span>${formatCurrency(quote.contingency_amount)}</span></div>
-      <div class="summary-row gst"><span>GST ${isInterstate ? '(IGST)' : '(CGST + SGST)'} (${CONFIG.gstin ? '18%' : '18%'})</span><span>${formatCurrency(gst.total_gst)}</span></div>
-      <div class="summary-row total"><span>Grand Total</span><span>${formatCurrency(quote.total_amount)}</span></div>
+      ${rows.map(([k, v]) => `<div class="quote-item"><span>${k}</span><span></span><span></span><span>${v}</span></div>`).join('')}
     </div>
     <div class="quote-terms">
-      <h4>Terms & Conditions</h4>
+      <h4>What happens next</h4>
       <ul>
-        <li>Payment: ${quote.payment_terms}</li>
-        <li>Delivery: ${quote.delivery_terms}</li>
-        <li>Warranty: ${quote.warranty_months} months from delivery</li>
-        <li>Validity: ${quote.validity_days} days from quote date</li>
-        <li>GSTIN: ${CONFIG.gstin}</li>
+        <li>Our team reviews your specifications and responds with an itemized quotation.</li>
+        <li>No automated pricing — every quote is prepared by our engineers.</li>
         <li>HSN Code: 8544 (Wiring Harness)</li>
       </ul>
     </div>
     <div class="quote-actions">
-      <button class="btn btn-primary" onclick="downloadQuote('${quote.quotation_id}')">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-        Download PDF
+      <button class="btn btn-primary" onclick="sendRFQByEmail()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+        Send this RFQ by email
       </button>
-      <button class="btn btn-outline" onclick="shareQuote('${quote.quotation_id}')">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="19" r="3"></circle><line x1="21" y1="12" x2="15" y2="12"></line><line x1="9" y1="12" x2="3" y2="12"></line></svg>
-        Share
+      <button class="btn btn-outline" onclick="window.print()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        Print / Save as PDF
       </button>
     </div>
   `;
 }
 
-function downloadQuote(quotationId) {
-  // Trigger PDF download
-  showToast('PDF download feature coming soon!', 'info');
+function sendRFQByEmail() {
+  if (!lastRFQ) {
+    showToast('Please prepare an RFQ summary first.', 'error');
+    return;
+  }
+  const d = lastRFQ;
+  const body = [
+    'Request for Quotation — Segan Industry',
+    `Date: ${new Date().toLocaleDateString('en-IN')}`,
+    '',
+    `Name: ${d.customer_name}`,
+    `Email: ${d.customer_email}`,
+    `Phone: ${d.customer_phone}`,
+    `Company: ${d.company_name || '-'}`,
+    `Harness Type: ${d.harness_type}`,
+    `Quantity: ${d.quantity}`,
+    `Wire Length (m): ${isNaN(d.wire_length_meters) ? '-' : d.wire_length_meters}`,
+    `Wire Gauge (mm²): ${isNaN(d.wire_gauge_mm2) ? '-' : d.wire_gauge_mm2}`,
+    `Connectors: ${d.connector_count}`,
+    `Terminals: ${d.terminal_count}`,
+    `Special Requirements: ${d.special_requirements}`,
+    `Delivery Location: ${d.delivery_location || 'Chennai, Tamil Nadu, India'}`,
+    `Expected Delivery (days): ${d.expected_delivery_days}`,
+  ].join('\n');
+
+  window.location.href =
+    `mailto:sales@seganindustry.com?subject=${encodeURIComponent(`RFQ: ${d.harness_type} Harness x ${d.quantity} — ${d.customer_name}`)}&body=${encodeURIComponent(body)}`;
+  showToast('Your email app opened with the RFQ ready to send', 'success');
 }
 
-function shareQuote(quotationId) {
-  // Share functionality
+function escapeHtml(value) {
+  if (value === null || value === undefined) return '';
+  const div = document.createElement('div');
+  div.textContent = String(value);
+  return div.innerHTML;
+}
+
+function shareQuote() {
+  // Share the RFQ page
   if (navigator.share) {
     navigator.share({
-      title: `Quotation ${quotationId} - Segan Industry`,
-      text: `Wiring harness quotation from Segan Industry Private Limited`,
-      url: window.location.origin + `/quote.html?id=${quotationId}`
+      title: 'Request a Quote — Segan Industry',
+      text: 'Request a wiring harness quotation from Segan Industry Private Limited',
+      url: window.location.href
     });
   } else {
-    navigator.clipboard.writeText(window.location.origin + `/quote.html?id=${quotationId}`);
+    navigator.clipboard.writeText(window.location.href);
     showToast('Link copied to clipboard!', 'success');
   }
 }
@@ -1066,7 +1229,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   console.log('🚀 Segan Industry Website Initialized');
   console.log(`   Page: ${page}`);
-  console.log(`   API: ${CONFIG.apiBaseUrl}`);
+  console.log('   Website API: legacy API retired — site runs on static fallbacks; live chat uses the production backend.');
 });
 
 // Export for global access
