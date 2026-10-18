@@ -2655,3 +2655,58 @@ textarea:focus-visible {
   --color-yellow-spark-dark: #ccac00;
   --color-yellow-spark-light: #ffe55c;
 }
+
+/* ============================================================
+   Segan enhancement v2.5 - watermark placement + title clarity
+   (founder screenshots, 2026-10-17):
+   1) Header "Segan Industry" is metallic-gradient text - its light
+      stop is capped darker so EVERY letter reads on the white bar.
+   2) Hero watermark moves to the open navy at top-right - no longer
+      hidden behind the white stats card.
+   3) A TRANSPARENT-background logo (assets/logo-watermark.png, its
+      navy backdrop keyed out) now watermarks the inner-page banners
+      and the white content sections as a premium ghost - no box,
+      no square edges, visible across white areas.
+   ============================================================ */
+:root {
+  --gradient-metallic: linear-gradient(90deg, #22345c 0%, #49638f 25%, #7e97bd 50%, #38507a 75%, #22345c 100%);
+}
+.hero-logo {
+  width: min(620px, 46%);
+  right: 3%;
+  top: 31%;
+  transform: translateY(-50%);
+  opacity: 0.22;
+}
+@media (max-width: 900px) {
+  .hero-logo { width: 120%; right: -10%; top: 24%; opacity: 0.16; }
+}
+/* Inner-page banners: transparent watermark, ghosted over the banner box */
+.products-hero::after, .automation-hero::after, .quote-hero::after {
+  background: url("assets/logo-watermark.png") center / contain no-repeat;
+  width: 470px;
+  height: 254px;
+  opacity: 0.13;
+  z-index: 2;
+}
+/* White content sections: premium centered watermark ghost */
+.section { position: relative; }
+.section:not(.products-hero):not(.automation-hero):not(.quote-hero)::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(540px, 82%);
+  height: 292px;
+  background: url("assets/logo-watermark.png") center / contain no-repeat;
+  opacity: 0.05;
+  z-index: 0;
+  pointer-events: none;
+}
+@media (max-width: 768px) {
+  .section:not(.products-hero):not(.automation-hero):not(.quote-hero)::after {
+    height: 200px;
+    opacity: 0.045;
+  }
+}
