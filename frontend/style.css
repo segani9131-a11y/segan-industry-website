@@ -2617,3 +2617,41 @@ textarea:focus-visible {
     opacity: 0.06;
   }
 }
+
+/* ============================================================
+   Segan enhancement v2.4 - CONTRAST pass for the light theme
+   (founder, 2026-10-17): silver wordings were unreadable on white.
+   On light sections, silver becomes deep steel-navy, cyan text
+   deepens to a readable blue, gold deepens to amber, muted text
+   deepens slightly. The navy hero + footer keep the ORIGINAL
+   bright silver / cyan / gold via scoped variables.
+   ============================================================ */
+:root {
+  --color-silver: #54678c;
+  --color-silver-light: #8296b8;
+  --color-silver-dark: #2e4066;
+  --gradient-secondary: linear-gradient(135deg, #54678c 0%, #2e4066 100%);
+  --gradient-metallic: linear-gradient(90deg, #2e4066 0%, #5f779f 25%, #93a7c9 50%, #41587f 75%, #2e4066 100%);
+  --color-electric-blue: #0284c7;
+  --color-electric-blue-dark: #0369a1;
+  --color-electric-blue-light: #38bdf8;
+  --color-yellow-spark: #d97706;
+  --color-yellow-spark-dark: #b45309;
+  --color-yellow-spark-light: #f59e0b;
+  --text-muted: #5b719c;
+  --shadow-glow-blue: 0 0 20px rgba(2, 132, 199, 0.25);
+  --shadow-glow-yellow: 0 0 20px rgba(217, 119, 6, 0.25);
+}
+.hero, .footer {
+  --color-silver: #c0c0c0;
+  --color-silver-light: #e8e8e8;
+  --color-silver-dark: #a0a0a0;
+  --gradient-secondary: linear-gradient(135deg, #c0c0c0 0%, #a0a0a0 100%);
+  --gradient-metallic: linear-gradient(90deg, #c0c0c0 0%, #e8e8e8 25%, #c0c0c0 50%, #a0a0a0 75%, #c0c0c0 100%);
+  --color-electric-blue: #00d4ff;
+  --color-electric-blue-dark: #0099cc;
+  --color-electric-blue-light: #66e0ff;
+  --color-yellow-spark: #ffd700;
+  --color-yellow-spark-dark: #ccac00;
+  --color-yellow-spark-light: #ffe55c;
+}
