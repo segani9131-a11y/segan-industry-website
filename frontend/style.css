@@ -2672,14 +2672,20 @@ textarea:focus-visible {
   --gradient-metallic: linear-gradient(90deg, #22345c 0%, #49638f 25%, #7e97bd 50%, #38507a 75%, #22345c 100%);
 }
 .hero-logo {
-  width: min(620px, 46%);
-  right: 3%;
-  top: 31%;
-  transform: translateY(-50%);
-  opacity: 0.22;
+  width: min(500px, 40%);
+  right: 5%;
+  top: 64px;
+  transform: none;
+  opacity: 0.24;
+}
+/* White stats card nudged down on desktop so it never covers the logo */
+@media (min-width: 901px) {
+  /* margin, not transform: .hero-visual runs a fadeInRight animation whose
+     final keyframe would override a static transform. */
+  .hero-visual { margin-top: 48px; }
 }
 @media (max-width: 900px) {
-  .hero-logo { width: 120%; right: -10%; top: 24%; opacity: 0.16; }
+  .hero-logo { width: 115%; right: -14%; top: 70px; opacity: 0.13; }
 }
 /* Inner-page banners: transparent watermark, ghosted over the banner box */
 .products-hero::after, .automation-hero::after, .quote-hero::after {
